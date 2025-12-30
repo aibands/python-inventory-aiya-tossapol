@@ -132,9 +132,9 @@ def viewInventory():
 
     print("Current Inventory:")
     for item in inventory.values():
-        for key,val in item.items():
-            print(f"{key}:{val}")
-        print("*"*10)
+        print(
+            f"ID: {item.id} | Name: {item.name} | Brand: {item.brand} | Quantity: {item.quantity} | Price: ${item.price:.2f}"
+        )
 
 
 def updateItem():
@@ -200,8 +200,8 @@ while(selectedOption != 5):
         removeItem()
     elif selectedOption == 5:
         saveInventory()
-    print("Saving inventory to file...")
-    print("Exiting system. Goodbye!")
-    break
+        print("Saving inventory to file...")
+        print("Exiting system. Goodbye!")
+        break
 else:
     print("Please select option 1-5")
