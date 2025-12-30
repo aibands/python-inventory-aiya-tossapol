@@ -13,26 +13,30 @@ categories = ["Produce", "Beverages", "Snacks"]
 
 #product class
 class product:
-    def __init__(self, id, name, quantity, price, brand):
+    def __init__(self, id, name, quantity, price, brand, category=None):
         self.id = id
         self.name = name
         self.price = price
         self.quantity = quantity
         self.brand = brand
+        self.category = category
     
     def showProduct(self):
         print(
             f"Item Id: {self.id} | "
             f"Item Name: {self.name} | "
             f"Brand: {self.brand} | "
+            f"Category: {self.category} | "
             f"Quantity: {self.quantity} | "
             f"Price: ${self.price:.2f}"
         )
 
 #for update #no need for brand because can't change
-    def update(self, name=None, quantity=None, price=None):
+    def update(self, name=None, category=None, quantity=None, price=None):
         if name is not None:
             self.name = name
+        if category is not None:
+            self.category = category
         if quantity is not None:
             self.quantity = quantity
         if price is not None:
@@ -49,14 +53,14 @@ def saveInventory():
     with open("inventory.txt", "w") as file:
         for product in inventory.values():
             file.write(
-                file.write(f"{product.id},{product.name},{product.brand},{product.quantity},{product.price}")
+                file.write(f"{product.id},{product.name},{product.brand},{product.category},{product.quantity},{product.price}")
             )
 
 def readInventory():
     try:
         with open("inventory.txt", "r") as file:
             for line in file:
-                id, name, quantity, price, brand = line.strip().split(",")
+                id, name, category, quantity, price, brand = line.strip().split(",")
                 item = product(int(id), name, (brand), int(quantity), float(price))
                 inventory[name.lower()] = item
                 item_id.add(int(id))
@@ -90,6 +94,7 @@ def addItem():
             f"- Current item details: ID: {old.id} | "
             f"Name: {old.name} | "
             f"Brand: {old.brand} | "
+            f"Category: {old.category} | "
             f"Quantity: {old.quantity} | "
             f"Price: ${old.price:.2f}"
         )
@@ -126,7 +131,11 @@ def addItem():
     price = float(input("Price: ").strip())            
     inventory[key] = product(id=len(item_id)+1, name=name, quantity=quantity, price=price, brand=brand)
     item_id.add(len(item_id)+1)
-    
+    #add categories
+    category = input(f"Select Categories({', '.join(categories)}): ").strip().lower()
+    if category not in categories:
+        print("category not found, defaulting to none.")
+
     print(f"'{name}' added successfully!")
 
 
@@ -139,7 +148,7 @@ def viewInventory():
     print("Current Inventory:")
     for item in inventory.values():
         print(
-            f"ID: {item.id} | Name: {item.name} | Brand: {item.brand} | Quantity: {item.quantity} | Price: ${item.price:.2f}"
+            f"ID: {item.id} | Name: {item.name} | Brand: {item.brand} | Category: {item.category} | Quantity: {item.quantity} | Price: ${item.price:.2f}"
         )
 
 
@@ -160,6 +169,7 @@ def updateItem():
         f"Item Found Name: ID: {foundItem.id} | "
         f"Name: {foundItem.name} | "
         f"Brand: {foundItem.brand} | "
+        f"Category: {foundItem.category} | "
         f"Quantity: {foundItem.quantity} | "
         f"Price: ${foundItem.price:.2f}"
         )
@@ -200,6 +210,15 @@ def updateItem():
         inventory[new_name.lower()] = inventory.pop(key)
 
     print("Inventory updated successfully!")
+
+    #categories
+    # Category
+    new_category = input(f"New category ({', '.join(categories)}): ").strip().lower()
+    if new_category and new_category not in categories:
+        print("Invalid category. Keeping old category.")
+        new_category = None
+    elif not new_category:
+        new_category = None
 
 def removeItem():
     print("Remove Item".center(50,"*"))
