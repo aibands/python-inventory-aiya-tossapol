@@ -151,24 +151,51 @@ def updateItem():
         return
 
     key = query.lower()
-    if key in inventory:
-        foundItem = inventory[key]
-        print(f"Item Found: Name: {foundItem['name']} | Brand: {foundItem['brand']} |Quantity: {foundItem['quantity']} | Price: {foundItem['price']}")
-    else:
+    if key not in inventory:
         print("No Item found.")
+        return
+    
+    foundItem = inventory[key]
+    print(
+        f"Item Found Name: ID: {foundItem.id} | "
+        f"Name: {foundItem.name} | "
+        f"Brand: {foundItem.brand} | "
+        f"Quantity: {foundItem.quantity} | "
+        f"Price: ${foundItem.price:.2f}"
+        )
 
     print("Press ENTER to keep current value")
     new_name = input("New name: ").strip()
     new_qty = input("New quantity: ").strip()
     new_price = input("New price: ").strip()
 
-    foundItem = inventory[key]
+    #quantity
+    if new_qty:
+        if new_qty.isdigit():
+            new_qty = int(new_qty)
+        else:
+            print("Invalid quantity.")
+            new_qty = None
+    else:
+        new_qty = None #keep old qty
+
+    #price
+    if new_price:
+        try:
+            new_price = float(new_price)
+        except ValueError:
+            print("Invalid price.")
+            new_price = None
+    else:
+        new_price = None #keep old price
+
     foundItem.update(
         name=new_name if new_name else None,
-        quantity=int(new_qty) if new_qty else None,
-        price=float(new_price) if new_price else None
+        quantity=new_qty,
+        price=new_price
     )
-    #replace old one
+
+    #name
     if new_name:
         inventory[new_name.lower()] = inventory.pop(key)
 
