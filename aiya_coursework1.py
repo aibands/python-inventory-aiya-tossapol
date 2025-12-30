@@ -78,7 +78,7 @@ def askYesNo(prompt): #use for let user want to add new item or not
     return answer in ("y","yes") 
 
 def addItem(): 
-    print("Add item")
+    print("Add Item". center(50, "*"))
     name = input("Item Name: ").strip().lower()
     if not name:
         print("Item Name cannot be empty")
@@ -126,15 +126,23 @@ def addItem():
 
     brand = input("Brand: ").strip().lower()
     quantity = int(input("Quantity: ").strip())
-    price = float(input("Price: ").strip())            
-    inventory[key] = product(id=len(item_id)+1, name=name, quantity=quantity, price=price, brand=brand)
-    item_id.add(len(item_id)+1)
+    price = float(input("Price: ").strip())         
+
     #add categories
     category = input(f"Select Categories({', '.join(categories)}): ").strip()
     if category not in categories:
-        print("category not found, defaulting to none.")
+        print("category not found, defaulting to uncategorized.")
 
-    print(f"'{name}' added successfully!")
+    print(f"'{name}' added to {category} successfully!")   
+    inventory[key] = product(
+    id=len(item_id)+1,
+    name=name,
+    quantity=quantity,
+    price=price,
+    brand=brand,
+    category=category if category in categories else "Uncategorized"
+)
+
 
 
 def viewInventory():
@@ -197,26 +205,28 @@ def updateItem():
     else:
         new_price = None #keep old price
 
-    foundItem.update(
-        name=new_name if new_name else None,
-        quantity=new_qty,
-        price=new_price
-    )
-
-    #name
-    if new_name:
-        inventory[new_name.lower()] = inventory.pop(key)
-
-    print("Inventory updated successfully!")
-
     #categories
-    # Category
     new_category = input(f"New category ({', '.join(categories)}): ").strip()
     if new_category and new_category not in categories:
         print("Invalid category. Keeping old category.")
         new_category = None
     elif not new_category:
         new_category = None
+
+    foundItem.update(
+        name=new_name if new_name else None,
+        quantity=new_qty,
+        price=new_price,
+        category=new_category if new_category else None
+    )
+
+    #name
+    if new_name:
+        inventory[new_name.lower()] = inventory.pop(key)
+
+
+    print("Inventory updated successfully!")
+
 
 def removeItem():
     print("Remove Item".center(50,"*"))
