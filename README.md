@@ -6,7 +6,7 @@ The system allows you to **add, view, update, and remove grocery products** whil
 ---
 
 ## How to Run
-1. vClone or download this repository.
+1. Clone or download this repository.
 2. Open a terminal and navigate to the project folder.
 3. Run the program:
     ```bash
@@ -22,7 +22,7 @@ The system allows you to **add, view, update, and remove grocery products** whil
 - Handles duplicate items and name conflicts
 - Simple category selection from a predefined list (Produce, Beverages, Snacks)
 
-## Any limitations
+## Limitations
 - Categories are limited to the predefined list. 
 - Inventory is saved in a simple text file, not a database.
 - No search/filter functionality by brand, category, or price range.
