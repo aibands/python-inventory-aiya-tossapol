@@ -86,7 +86,13 @@ def addItem():
     if key in inventory: 
         old = inventory[key] 
         print("Item already exist.")
-        print(f"- Current item details: Item Name: {old['id']} | Item Name: {old['name']} | Brand: {old['brand']} | Quantity: {old['quantity']} | Price: {old['price']}")
+        print(
+            f"- Current item details: ID: {old.id} | "
+            f"Name: {old.name} | "
+            f"Brand: {old.brand} | "
+            f"Quantity: {old.quantity} | "
+            f"Price: ${old.price:.2f}"
+        )
 
         replace = askYesNo("Replace this Item? (y/n):")
         if not replace: # if user say no -> false -> user want to add new item
