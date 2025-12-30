@@ -7,7 +7,14 @@ mainMenu = (
     "5.Exit"
     )
 inventory = dict()
-selectedOption = 0
+
+#implement error handling
+try:
+    selectedOption = int(input("Select an option: > "))
+except ValueError:
+    print("Please select menu 1-5")
+    continue
+
 
 def printMenu(menuItems):
     for menu in menuItems:
@@ -24,8 +31,8 @@ def addItem():
         print("Item Name cannot be empty")
         return
     key = name.lower()
-    if key in items: 
-        old = items[key] #take from the items
+    if key in inventory: 
+        old = inventory[key] 
         print("Item already exist.")
         print(f"- Current item details: Item Name: {old['name']} | Quantity: {old['quantity']} | Price: {old['price']}")
         replace = askYesNo("Replace this Item? (y/n):")
@@ -62,8 +69,8 @@ def addItem():
 
 def viewInventory():
     print("Current Inventory:")
-    for inventory in inventory.values():
-        for key,val in inventory.items():
+    for item in inventory.values():
+        for key,val in item.items():
             print(f"{key}:{val}")
         print("*"*10)
 
@@ -85,13 +92,13 @@ def updateItem():
 def removeItem():
     print("Remove Item".center(50,"*"))
     query = input("Enter item name to remove: ").strip()
-    if not name:
+    if not query:
         print("Item name cannot be empty.")
         return
-    key = name.lower()
+    key = query.lower()
     if key in inventory:
         removed = inventory.pop(key)
-        print(f"{'name'} is removed...")
+        print(f"{'query'} is removed...")
     else: 
         print("No Item found.")
 
