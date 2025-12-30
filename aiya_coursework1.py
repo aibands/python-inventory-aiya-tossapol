@@ -1,4 +1,4 @@
-#Management system
+#Groceries Inventory Management system
 mainMenu = (
     "1.Add Item", 
     "2.View Inventory", 
@@ -6,17 +6,68 @@ mainMenu = (
     "4.Remove Item", 
     "5.Exit"
     )
+
 inventory = dict()
+item_id = set() 
+categories = ["Produce", "Beverages", "Snacks"]
 
-#implement error handling
-try:
-    selectedOption = int(input("Select an option: > "))
-except ValueError:
-    print("Please select menu 1-5")
-    continue
+#product class
+class product:
+    def __init__(self, id, name, quantity, price, brand):
+        self.id = id
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+        self.brand = brand
+    
+    def showProduct(self):
+        print(
+            f"Item Id: {self.id} | "
+            f"Item Name: {self.name} | "
+            f"Brand: {self.brand} | "
+            f"Quantity: {self.quantity} | "
+            f"Price: ${self.price:.2f}"
+        )
 
+#for update #no need for brand because can't change
+    def update(self, name=None, quantity=None, price=None):
+        if name is not None:
+            self.name = name
+        if quantity is not None:
+            self.quantity = quantity
+        if price is not None:
+            self.price = price
+
+#expiration date sub class
+class PerishableProduct(product):
+    def __init__(self, id, name, quantity, price, brand, expiration_date):
+        super().__init__(id, name, quantity, price, brand)
+        self.expiration_date = expiration_date
+
+#file
+def saveInventory():
+    with open("inventory.txt", "w") as file:
+        for product in inventory.values():
+            file.write(
+                file.write(f"{product.id},{product.name},{product.brand},{product.quantity},{product.price}")
+            )
+
+def readInventory():
+    try:
+        with open("inventory.txt", "r") as file:
+            for line in file:
+                id, name, quantity, price, brand = line.strip().split(",")
+                item = product(int(id), name, (brand), int(quantity), float(price))
+                inventory[name.lower()] = item
+                item_id.add(int(id))
+    except FileNotFoundError:
+        print("File not found.")
+        pass
+    
 
 def printMenu(menuItems):
+    print("Welcome to the Inventory Management System!")
+    print("=" * 50)
     for menu in menuItems:
         print(menu)
 
@@ -30,11 +81,13 @@ def addItem():
     if not name:
         print("Item Name cannot be empty")
         return
+
     key = name.lower()
     if key in inventory: 
         old = inventory[key] 
         print("Item already exist.")
-        print(f"- Current item details: Item Name: {old['name']} | Quantity: {old['quantity']} | Price: {old['price']}")
+        print(f"- Current item details: Item Name: {old['id']} | Item Name: {old['name']} | Brand: {old['brand']} | Quantity: {old['quantity']} | Price: {old['price']}")
+
         replace = askYesNo("Replace this Item? (y/n):")
         if not replace: # if user say no -> false -> user want to add new item
             create_new = askYesNo("Create a new item with number incrementation? (y/n)")
@@ -62,33 +115,56 @@ def addItem():
                     print("Item already exist.")
                     return
 
+    brand = input("Brand: ").strip().lower()
     quantity = int(input("Quantity: ").strip())
     price = float(input("Price: ").strip())            
-    inventory[key] = {"name": name , "quantity": quantity ,"price": price}
-    print(f"{name} added successfully!")
+    inventory[key] = product(id=len(item_id)+1, name=name, quantity=quantity, price=price, brand=brand)
+    item_id.add(len(item_id)+1)
 
 def viewInventory():
+    print("Inventory". center(50, "*"))
+    if not inventory:
+        print("Inventory is empty.")
+        return
+
     print("Current Inventory:")
     for item in inventory.values():
         for key,val in item.items():
             print(f"{key}:{val}")
         print("*"*10)
 
+
 def updateItem():
-    print("Search Contact". center(50, "*"))
+    print("Update Item". center(50, "*"))
     query = input("Enter item name to update: ").strip()
     if not query:
         print("Item name cannot be empty.")
         return
+
     key = query.lower()
     if key in inventory:
         foundItem = inventory[key]
-        print(f"Item Found: Name {foundItem['name']} | Quantity({foundItem['quantity']}) | Price({foundItem['price']})")
+        print(f"Item Found: Name: {foundItem['name']} | Brand: {foundItem['brand']} |Quantity: {foundItem['quantity']} | Price: {foundItem['price']}")
     else:
         print("No Item found.")
 
-        #then user can edit
-    
+    print("Press ENTER to keep current value")
+    new_name = input("New name: ").strip()
+    new_qty = input("New quantity: ").strip()
+    new_price = input("New price: ").strip()
+
+    foundItem = inventory[key]
+    foundItem.update(
+        name=new_name if new_name else None,
+        quantity=int(new_qty) if new_qty else None,
+        price=float(new_price) if new_price else None
+    )
+    #replace old one
+    if new_name:
+        inventory[new_name.lower()] = inventory.pop(key)
+
+    print("Inventory updated successfully!")
+
 def removeItem():
     print("Remove Item".center(50,"*"))
     query = input("Enter item name to remove: ").strip()
@@ -98,22 +174,28 @@ def removeItem():
     key = query.lower()
     if key in inventory:
         removed = inventory.pop(key)
-        print(f"{'query'} is removed...")
+        print(f"{query} is removed...")
     else: 
         print("No Item found.")
 
+selectedOption = 0
 while(selectedOption != 5):
     printMenu(mainMenu)
-    selectedOption = int(input("Select an option: > ")) 
-    if(selectedOption not in range(1,6)): 
+    try:
+        selectedOption = int(input("Select an option: > "))
+    except ValueError:
         print("Please select option 1-5")
         continue
+
     if selectedOption == 1:
         addItem()
-    if selectedOption == 2:
+    elif selectedOption == 2:
         viewInventory()
-    if selectedOption == 3:
+    elif selectedOption == 3:
         updateItem()
-    if selectedOption == 4:
+    elif selectedOption == 4:
         removeItem()
-print("Exiting system. Goodbye!")
+    elif selectedOption == 5:
+        saveInventory()
+    print("Saving inventory to file...")
+    print("Exiting system. Goodbye!")
