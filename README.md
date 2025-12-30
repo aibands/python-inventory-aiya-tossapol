@@ -6,12 +6,12 @@ The system allows you to **add, view, update, and remove grocery products** whil
 ---
 
 ## How to Run
-1.Clone or download this repository.
-2.Open a terminal and navigate to the project folder.
-3.Run the program:
+1. vClone or download this repository.
+2. Open a terminal and navigate to the project folder.
+3. Run the program:
     ```bash
     python3 aiya_coursework1.py
-5.Follow the on-screen menu in the management system.
+4. Follow the on-screen menu in the management system.
 
 ## Features implemented
 - Add new items to inventory
