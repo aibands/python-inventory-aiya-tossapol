@@ -1,1 +1,1 @@
-1,chips,None,lays,10,19.0
+1,beer,ipa,None,10,99.99

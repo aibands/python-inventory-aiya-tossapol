@@ -52,9 +52,7 @@ class PerishableProduct(product):
 def saveInventory():
     with open("inventory.txt", "w") as file:
         for product in inventory.values():
-            file.write(
-                file.write(f"{product.id},{product.name},{product.brand},{product.category},{product.quantity},{product.price}")
-            )
+            file.write(f"{product.id},{product.name},{product.brand},{product.category},{product.quantity},{product.price}")
 
 def readInventory():
     try:
@@ -132,7 +130,7 @@ def addItem():
     inventory[key] = product(id=len(item_id)+1, name=name, quantity=quantity, price=price, brand=brand)
     item_id.add(len(item_id)+1)
     #add categories
-    category = input(f"Select Categories({', '.join(categories)}): ").strip().lower()
+    category = input(f"Select Categories({', '.join(categories)}): ").strip()
     if category not in categories:
         print("category not found, defaulting to none.")
 
@@ -213,7 +211,7 @@ def updateItem():
 
     #categories
     # Category
-    new_category = input(f"New category ({', '.join(categories)}): ").strip().lower()
+    new_category = input(f"New category ({', '.join(categories)}): ").strip()
     if new_category and new_category not in categories:
         print("Invalid category. Keeping old category.")
         new_category = None
