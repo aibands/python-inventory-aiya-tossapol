@@ -120,6 +120,9 @@ def addItem():
     price = float(input("Price: ").strip())            
     inventory[key] = product(id=len(item_id)+1, name=name, quantity=quantity, price=price, brand=brand)
     item_id.add(len(item_id)+1)
+    
+    print(f"'{name}' added successfully!")
+
 
 def viewInventory():
     print("Inventory". center(50, "*"))
@@ -199,3 +202,6 @@ while(selectedOption != 5):
         saveInventory()
     print("Saving inventory to file...")
     print("Exiting system. Goodbye!")
+    break
+else:
+    print("Please select option 1-5")
